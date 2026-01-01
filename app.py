@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify # Import necessary modules
 from model.bert_model import predict_with_bert
 
 app = Flask(__name__)
