@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .app-body {
+            padding: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 25px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 18px;
+            border: 1.5px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            background: #fafbfc;
+            transition: all 0.3s ease;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .clear-btn {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1.5px solid #e9ecef;
+        }
+
+        .clear-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .result-section {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .no-stress {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+
+        .stress-detected {
+            background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .result-emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+
+        .result-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .result-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.85rem;
+            border-top: 1px solid #f1f3f4;
+            background: #fafbfc;
+        }
+
+        .example-text {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stress Analysis</h1>
+            <p>Share your thoughts and understand your stress levels</p>
+        </header>
+        
+        <div class="app-body">
+            <div class="input-section">
+                <textarea id="userInput" placeholder="How are you feeling today? Share your thoughts, worries, or anything on your mind...">i am laughing</textarea>
+                <div class="example-text">Try: "I feel overwhelmed with work" or "Today was a peaceful day"</div>
+                
+                <div class="button-container">
+                    <button class="analyze-btn" onclick="getPrediction()">Analyze Stress Level</button>
+                    <button class="clear-btn" onclick="clearText()">Clear</button>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your thoughts...</p>
+            </div>
+            
+            <div class="result-section" id="result">
+                <div class="result-emoji" id="resultEmoji">😊</div>
+                <div class="result-title" id="resultTitle">No Stress Detected</div>
+                <div class="result-description" id="resultDescription">Your text shows positive emotional indicators</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Powered by AI • Your mental wellbeing matters</p>
+        </footer>
+    </div>
+
+    <script>
+        function getPrediction() {
+            const text = document.getElementById('userInput').value.trim();
+            const loading = document.getElementById('loading');
+            const resultSection = document.getElementById('result');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDescription = document.getElementById('resultDescription');
+            const resultEmoji = document.getElementById('resultEmoji');
+            
+            if (text.length === 0) {
+                alert('Please share your thoughts to analyze stress levels.');
+                return;
+            }
+            
+            // Show loading animation
+            loading.style.display = 'block';
+            resultSection.style.display = 'none';
+            
+            // Make API call to Flask backend
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'text=' + encodeURIComponent(text)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Hide loading animation
+                loading.style.display = 'none';
+                
+                // Update UI based on prediction
+                if (data.result === "No Stress") {
+                    resultSection.className = 'result-section no-stress';
+                    resultTitle.textContent = 'No Stress Detected';
+                    resultDescription.textContent = 'Your text shows positive emotional indicators.';
+                    resultEmoji.textContent = '😊';
+                } else {
+                    resultSection.className = 'result-section stress-detected';
+                    resultTitle.textContent = 'Stress Detected';
+                    resultDescription.textContent = 'Your text shows signs of stress. Consider taking breaks or talking to someone.';
+                    resultEmoji.textContent = '😟';
+                }
+                
+                // Show result section
+                resultSection.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                alert('Error analyzing your thoughts. Please try again.');
+            });
+        }
+        
+        function clearText() {
+            document.getElementById('userInput').value = '';
+            document.getElementById('result').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
