@@ -7,14 +7,7 @@ The project focuses on backend logic, machine learning integration, and real-tim
 This application demonstrates how Python can be used to build intelligent systems that process human emotions and textual data efficiently.
 
 ---
-> ⚠️ **Note:**  
-> This application is currently a functional prototype and is **not fully optimized for enhanced UI/UX experience**.  
-> The primary focus of this project is backend logic, Python integration, and model functionality.  
->  
-> Improvements related to **better design, smoother user experience, and large-scale usability** are planned in future updates.  
-> Stay tuned for upcoming versions with a more polished interface and professional UI/UX enhancements.
 
----
 ## ⚙️ Key Features
 - 📝 Accepts user text input for analysis  
 - 🧠 Analyzes stress level using a trained NLP / ML model  
@@ -34,6 +27,94 @@ This application demonstrates how Python can be used to build intelligent system
 ---
 
 ## 📂 Project Structure
+
+---
+
+## ▶️ How to Run This Project
+
+Follow the steps below to run the project locally on your system:
+
+### 1️⃣ Clone the Repository
+```bash
+git clone <repository-url>
+```
+
+Navigate into the project directory:
+```bash
+cd StressAnalysis
+```
+
+---
+
+### 2️⃣ Create and Activate Virtual Environment (Recommended)
+
+Create a virtual environment:
+```bash
+python3 -m venv venv
+```
+
+Activate it:
+
+**On macOS / Linux**
+```bash
+source venv/bin/activate
+```
+
+**On Windows**
+```bash
+venv\Scripts\activate
+```
+
+---
+
+### 3️⃣ Install Required Dependencies
+
+Install Flask:
+```bash
+pip install flask
+```
+
+If the project uses NLP or machine learning libraries:
+```bash
+pip install torch transformers
+```
+
+(If a `requirements.txt` file is available, run:)
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 4️⃣ Run the Application
+
+Start the Flask server:
+```bash
+python app.py
+```
+
+You should see:
+```
+Running on http://127.0.0.1:5000/
+```
+
+---
+
+### 5️⃣ Open in Browser
+
+Open your browser and visit:
+```
+http://127.0.0.1:5000/
+```
+
+---
+
+### 🛑 Stop the Server
+Press:
+```bash
+CTRL + C
+```
+in the terminal.
 
 ---
 
@@ -73,3 +154,10 @@ This project was developed as part of academic and self-learning practice using 
 ## 📌 Conclusion
 The Stress Analysis System showcases the power of Python in building intelligent, real-world applications.  
 With further enhancements, it can evolve into a complete mental health support platform.
+
+> ⚠️ **Note:**  
+> This application is currently a functional prototype and is **not fully optimized for advanced UI/UX experience**.  
+> The primary focus of this project is backend logic, Python integration, and model functionality.  
+>  
+> Enhancements related to **improved design, better usability, and large-scale deployment** are planned for future versions.  
+> Stay tuned for updates with a more polished and professional user interface.
